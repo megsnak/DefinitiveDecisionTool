@@ -1,26 +1,39 @@
 import tkinter as tk
 import random
 from PIL import Image, ImageTk
-from select import select
 
 
 def animate_images():
-    global current
-    canvas.itemconfig(image_on_canvas, image = image_sequence[current])
-    current = (current + 1)%len(image_sequence)
-    window.after(20, animate_images)
+    global current, is_animating
+    if is_animating:
+        canvas.itemconfig(image_on_canvas, image = image_sequence[current])
+        current = (current + 1)%len(image_sequence)
+        window.after(20, animate_images)
 
 def stop_coin():
-    canvas.delete("all")
+    global is_animating
+    is_animating = False
     sides = [side1_entry.get(), side2_entry.get()]
     selection = random.randrange(0,2)
-    if selection == 0:
-        canvas.create_image(500, 450, image=image_sequence[0])
-    elif selection == 1:
-        canvas.create_image(500, 450, image=image_sequence[4])
-    selection_label = tk.Label(text = sides[selection])
-    selection_label.config(font=("Arial", 20), fg="red")
-    selection_label.grid(column= 1, row=0)
+    # if selection == 0:
+    #     canvas.create_image(500, 450, image=image_sequence[0])
+    # elif selection == 1:
+    #     canvas.create_image(500, 450, image=image_sequence[4])
+    selected_image = image_sequence[0] if selection == 0 else image_sequence[4]
+    canvas.itemconfig(image_on_canvas, image=selected_image) # Update image on canvas
+    selection_label.config(text= sides[selection], font=("Arial", 20), fg="red")
+    return selection_label
+
+def start_coin():
+    global is_animating
+    selection_label.config(text=" ")
+    if not is_animating:
+        is_animating= True
+        animate_images()
+    if not side1_entry.get():
+        side1_entry.insert(0, "Head")
+    if not side2_entry.get():
+        side2_entry.insert(0,"Tail")
 
 window = tk.Tk()
 window.title("Flipping coin")
@@ -50,7 +63,7 @@ side2_entry.grid(column= 0, row = 5)
 
 canvas = tk.Canvas()
 
-turn_button = tk.Button(text ="Flip the coin", command=animate_images)
+turn_button = tk.Button(text ="Flip the coin", command=start_coin)
 turn_button.config(font=("Arial",15))
 turn_button.grid(column= 0, row = 6)
 
@@ -71,7 +84,11 @@ for path in frames:
     photo = ImageTk.PhotoImage(img)
     image_sequence.append(photo)
 current = 0
+is_animating = False # Animation Flag
 image_on_canvas = canvas.create_image(500,450, image = image_sequence[current])
 canvas.grid(column= 1, row = 0, rowspan=6)
+
+selection_label = tk.Label(text=" ", font=("Arial", 20))
+selection_label.grid(column=1, row=0)
 
 window.mainloop()
