@@ -1,3 +1,3 @@
-The definitive decision tool
-Minimal and efficient
-It decides for you
+The definitive decision tool  
+Minimal and efficient  
+It decides for you  
