@@ -12,16 +12,17 @@ def animate_images():
 
 def stop_coin():
     global is_animating
+    if is_animating == True:
+        sides = [side1_entry.get(), side2_entry.get()]
+        selection = random.randrange(0,2)
+        # if selection == 0:
+        #     canvas.create_image(500, 450, image=image_sequence[0])
+        # elif selection == 1:
+        #     canvas.create_image(500, 450, image=image_sequence[4])
+        selected_image = image_sequence[0] if selection == 0 else image_sequence[4]
+        canvas.itemconfig(image_on_canvas, image=selected_image) # Update image on canvas
+        selection_label.config(text= sides[selection], font=("Arial", 20), fg="red")
     is_animating = False
-    sides = [side1_entry.get(), side2_entry.get()]
-    selection = random.randrange(0,2)
-    # if selection == 0:
-    #     canvas.create_image(500, 450, image=image_sequence[0])
-    # elif selection == 1:
-    #     canvas.create_image(500, 450, image=image_sequence[4])
-    selected_image = image_sequence[0] if selection == 0 else image_sequence[4]
-    canvas.itemconfig(image_on_canvas, image=selected_image) # Update image on canvas
-    selection_label.config(text= sides[selection], font=("Arial", 20), fg="red")
     return selection_label
 
 def start_coin():
